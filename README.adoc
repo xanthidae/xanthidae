@@ -1,0 +1,64 @@
+= SYNOPSIS
+
+A Rust-based plugin for PL/SQL Developer. Main feature is the generation of migration scripts for Flyway.
+
+= BUILD
+
+== Windows
+[source,shell]
+---------------
+cargo build
+---------------
+
+== Linux
+There are several ways to compile the plugin on Linux. We recommend using cross. You can obtain it via
+[source,shell]
+---------------
+cargo install cross
+---------------
+
+Afterwards, building the plugin is pretty straightforward:
+
+[source,shell]
+---------------
+cross build --target x86_64-pc-windows-gnu
+---------------
+
+If the build was successful, the output can be found in target/x86_64-pc-windows-gnu/debug.
+
+
+= INSTALL
+== DIRECT INSTALLATION
+[source,shell]
+---------------
+copy rustplugin.dll c:\program files\plsql developer <version>\plugins\
+---------------
+
+== SYMLINK (for developers)
+If you want to avoid having to copy the file every time you build a new version, you can use a symbolic link instead:
+[source,shell]
+--------------
+mklink <version>\plugins\rustplugin.dll rustplugin.dll
+--------------
+*CAVEAT* If you use this approach, cargo build will fail if a PL/SQL Developer instance is running (because the output file is locked).
+
+
+= DEBUG
+For debugging, you can use e.g. Python to check whether the DLL can be loaded successfully:
+
+[source,shell]
+---------------
+from ctypes import *
+print(cdll.rustplugin.IdentifyPlugIn(7))
+---------------
+
+= RUN
+[source,shell]
+---------------
+plsqldev.exe /debugplugins
+---------------
+
+(this will create a file %appdata%/PLSQL Developer <version>/debug.txt containing helpful messages for debugging)
+
+= LICENSE
+Apache 2.0 (see LICENSE file for details)

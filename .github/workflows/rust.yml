@@ -1,0 +1,67 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test-all-platforms:
+    name: Test Rust ${{ matrix.rust }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        rust: [stable, nightly]
+    steps:
+      - uses: actions/checkout@v2
+      # Note: we use https://github.com/hecrj/setup-rust-action; if this doesn't fit our requirements,
+      #       switching to https://github.com/actions-rs/cargo should be pretty straightforward
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: ${{ matrix.rust }}
+      - run: cargo test --verbose --workspace --all-features
+      - run: cargo test --verbose --workspace --no-default-features      
+
+  build-all-platforms:
+    name: Build Rust ${{ matrix.rust }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        rust: [stable, nightly]
+    steps:
+      - uses: actions/checkout@v2
+      # Note: we use https://github.com/hecrj/setup-rust-action; if this doesn't fit our requirements,
+      #       switching to https://github.com/actions-rs/cargo should be pretty straightforward
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: ${{ matrix.rust }}
+      - run: cargo build
+
+  check-format:
+    name: Check Rust formatting for ${{ matrix.rust }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        rust: [stable]
+    steps:
+      # This uses https://github.com/actions-rs/cargo because I was too lazy to check whether hecrj/setup-rust-action supports rustfmt
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: rustfmt
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check    

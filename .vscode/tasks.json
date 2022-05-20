@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cargo",
+			"subcommand": "build",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: cargo build - rust-plsql-developer-plugin"
+		},
+		{
+			"type": "shell",
+			"command": "cross build --target x86_64-pc-windows-gnu",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: cross build for Win64- rust-plsql-developer-plugin"
+		},
+		{
+			"type": "shell",
+			"command": "cross test --target x86_64-pc-windows-gnu",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: cross test for Win64- rust-plsql-developer-plugin"
+		},
+	]
+}

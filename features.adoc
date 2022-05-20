@@ -1,0 +1,17 @@
+= IDEAS
+- "Save current window as versioned migration" ?
+   Pro: sets filename for current window, prevents "Window changed. save?" dialog when exiting
+   Con: might tempt developers to include everything in a single versioned migration / edit
+existing migrations instead of creating new ones
+
+= TODO
+- prevent "Filename x.sql exists. Overwrite?" dialog for versioned migrations;
+  the filename is automatically prepended with the current timestamp, therefore,
+  no file will be overwritten
+- versioned + repeatable migrations
+
+= IN WORK
+
+= DONE
+- versioned migration (write currently selected text to user-selected file)
+- repeatable migration
