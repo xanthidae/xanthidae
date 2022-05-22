@@ -1,6 +1,8 @@
 = SYNOPSIS
 
-A Rust-based plugin for PL/SQL Developer. Main feature is the generation of migration scripts for Flyway.
+A Rust-based plugin for the https://www.allroundautomations.com/products/pl-sql-developer/[PL/SQL Developer] IDE. Main feature is the generation of migration scripts for https://flywaydb.org/[Flyway].
+
+In case you're wondering about the name - https://en.wikipedia.org/wiki/Xanthidae[Xanthidae] is a family of crabs, and therefore, choosing that name for a Rust-based plugin seemed kind of natural (also, all the good names were already taken :-)
 
 = BUILD
 
