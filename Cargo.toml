@@ -8,10 +8,21 @@ authors = [
 ]
 publish = false
 edition = "2018"
+build = "build.rs"
 
 [lib]
-name = "rustplugin"
+name = "xanthidae"
 crate-type = ["cdylib"]
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"
+
+[package.metadata.winres]
+OriginalFilename = "xanthidae.dll"
+LegalCopyright = "This software is released under the Apache 2.0 license"
+FileDescription = "PL/SQL-Developer Plugin written in the Rust programming language"
+ProductName = "Xanthidae"
+ProductVersion = "1.0"
 
 [dependencies]
 winapi = { version = "0.3.9", features = ["winuser", "commdlg", "shobjidl", "shobjidl_core", "combaseapi", "objbase", "winbase"] }
