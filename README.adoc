@@ -33,14 +33,14 @@ If the build was successful, the output can be found in target/x86_64-pc-windows
 == DIRECT INSTALLATION
 [source,shell]
 ---------------
-copy rustplugin.dll c:\program files\plsql developer <version>\plugins\
+copy xanthidae.dll c:\program files\plsql developer <version>\plugins\
 ---------------
 
 == SYMLINK (for developers)
 If you want to avoid having to copy the file every time you build a new version, you can use a symbolic link instead:
 [source,shell]
 --------------
-mklink <version>\plugins\rustplugin.dll rustplugin.dll
+mklink <version>\plugins\xanthidae.dll xanthidae.dll
 --------------
 *CAVEAT* If you use this approach, cargo build will fail if a PL/SQL Developer instance is running (because the output file is locked).
 
@@ -51,7 +51,7 @@ For debugging, you can use e.g. Python to check whether the DLL can be loaded su
 [source,shell]
 ---------------
 from ctypes import *
-print(cdll.rustplugin.IdentifyPlugIn(7))
+print(cdll.xanthidae.IdentifyPlugIn(7))
 ---------------
 
 = RUN
