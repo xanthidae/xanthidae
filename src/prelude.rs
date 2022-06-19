@@ -19,8 +19,8 @@ use crate::flyway::create_versioned_migration;
 use crate::plsqldev_api::{NativePlsqlDevApi, PlsqlDevApi};
 use crate::windows_api::show_message_box;
 
-const PLUGIN_NAME: &[u8] = b"Rust PL/SQL-Developer Plugin\0";
-const TAB_NAME: &[u8] = b"TAB=Rust Plugin (BETA)\0";
+const PLUGIN_NAME: &[u8] = b"Xanthidae\0";
+const TAB_NAME: &[u8] = b"TAB=Xanthidae\0";
 const FLYWAY_GROUP_NAME: &[u8] = b"GROUP=Flyway\0";
 const ITEM_NAME_VERSIONED_MIGRATION: &[u8] = b"ITEM=Versioned migration\0";
 const ITEM_NAME_REPEATABLE_MIGRATION: &[u8] = b"ITEM=Repeatable migration\0";
@@ -69,7 +69,7 @@ lazy_static! {
     pub static ref API: RwLock<Box<dyn PlsqlDevApi + Send + Sync>> = RwLock::new(Box::new(NativePlsqlDevApi::new()));
     pub static ref CONFIG: RwLock<Config> = RwLock::new(Config::default());
     static ref VERSION_MESSAGE: CString = CString::new(format!(
-        "This is version {} of the Rust PL/SQL-Developer Plugin",
+        "This is version {} of Xanthidae, a plugin written in Rust",
         VERSION
     ))
     .unwrap();

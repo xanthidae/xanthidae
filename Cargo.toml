@@ -7,7 +7,7 @@ authors = [
     "Frank Schmitt"
 ]
 publish = false
-edition = "2018"
+edition = "2021"
 build = "build.rs"
 
 [lib]
