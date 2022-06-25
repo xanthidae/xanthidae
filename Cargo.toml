@@ -14,9 +14,6 @@ build = "build.rs"
 name = "xanthidae"
 crate-type = ["cdylib"]
 
-[target.'cfg(windows)'.build-dependencies]
-winres = "0.1"
-
 [package.metadata.winres]
 OriginalFilename = "xanthidae.dll"
 LegalCopyright = "This software is released under the Apache 2.0 license"
@@ -33,3 +30,9 @@ simplelog = "0.10.0"
 chrono = "0.4.19"
 regex = "1.4.5"
 indoc = "1.0.3"
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"
+
+[build-dependencies]
+vergen = "7.1.0"
