@@ -7,7 +7,7 @@ extern crate vergen;
 fn main() {
     use vergen::{Config, vergen};
     // Generate the default 'cargo:' instruction output
-    //let _vers = vergen(Config::default());
+    let _vers = vergen(Config::default());
     let res = winres::WindowsResource::new();
     //res.set_icon("xanthidae.ico");
     res.compile().unwrap();
