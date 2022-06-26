@@ -13,7 +13,7 @@ cargo build
 ---------------
 
 == Linux
-There are several ways to compile the plugin on Linux. We recommend using cross. You can obtain it via
+There are several ways to compile the plugin on Linux. We recommend using https://github.com/cross-rs/cross[cross]. You can obtain it via
 [source,shell]
 ---------------
 cargo install cross

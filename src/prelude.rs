@@ -59,6 +59,8 @@ const POPUP_ITEM_NAME_REPEATABLE_AND_VERSIONED_MIGRATION: &str =
 
 const VERSION_INFO_CAPTION: &[u8] = b"Version info\0";
 const VERSION: &str = env!("CARGO_PKG_VERSION");
+const BUILD_TIMESTAMP: &str = env!("VERGEN_BUILD_TIMESTAMP");
+const VERGEN_GIT_SHA: &str = env!("VERGEN_GIT_SHA");
 
 static mut PLUGIN_ID: c_int = 0;
 
@@ -69,8 +71,11 @@ lazy_static! {
     pub static ref API: RwLock<Box<dyn PlsqlDevApi + Send + Sync>> = RwLock::new(Box::new(NativePlsqlDevApi::new()));
     pub static ref CONFIG: RwLock<Config> = RwLock::new(Config::default());
     static ref VERSION_MESSAGE: CString = CString::new(format!(
-        "This is version {} of Xanthidae, a plugin written in Rust",
-        VERSION
+        "This is version {} of Xanthidae, a plugin written in Rust.\n\
+         \n\
+         Build date: {}\n\
+         Git SHA: {}",
+        VERSION, BUILD_TIMESTAMP, VERGEN_GIT_SHA
     ))
     .unwrap();
 }

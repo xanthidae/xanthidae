@@ -2,13 +2,40 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "cargo",
-			"subcommand": "build",
+			"type": "shell",
+			"command": "cargo build",
 			"problemMatcher": [
 				"$rustc"
 			],
 			"group": "build",
 			"label": "Rust: cargo build - rust-plsql-developer-plugin"
+		},
+		{
+			"type": "shell",
+			"command": "cargo check",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: run checks"
+		},
+		{
+			"type": "shell",
+			"command": "cargo fmt --all -- --check",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: check format"
+		},
+		{
+			"type": "shell",
+			"command": "cargo test",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: run tests"
 		},
 		{
 			"type": "shell",
