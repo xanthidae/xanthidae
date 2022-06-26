@@ -71,9 +71,9 @@ lazy_static! {
     pub static ref API: RwLock<Box<dyn PlsqlDevApi + Send + Sync>> = RwLock::new(Box::new(NativePlsqlDevApi::new()));
     pub static ref CONFIG: RwLock<Config> = RwLock::new(Config::default());
     static ref VERSION_MESSAGE: CString = CString::new(format!(
-        "This is version {} of Xanthidae, a plugin written in Rust.\n
-         \n
-         Build date: {}\n
+        "This is version {} of Xanthidae, a plugin written in Rust.\n\
+         \n\
+         Build date: {}\n\
          Git SHA: {}",
         VERSION, BUILD_TIMESTAMP, VERGEN_GIT_SHA
     ))

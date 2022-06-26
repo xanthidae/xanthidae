@@ -12,6 +12,33 @@
 		},
 		{
 			"type": "shell",
+			"command": "cargo check",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: run checks"
+		},
+		{
+			"type": "shell",
+			"command": "cargo fmt --all -- --check",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: check format"
+		},
+		{
+			"type": "shell",
+			"command": "cargo test",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: run tests"
+		},
+		{
+			"type": "shell",
 			"command": "cross build --target x86_64-pc-windows-gnu",
 			"problemMatcher": [
 				"$rustc"
