@@ -325,7 +325,7 @@ fn ensure_owner_in_ddl(
     object_name: &str,
 ) -> String {
     lazy_static! {
-        static ref DDL: Regex = RegexBuilder::new(r#"create or replace (editionable|noneditionable)?\s*(package|type|view|trigger|function|procedure)\s*(body )?[a-z0-9_$"]+\s*(\([a-z0-9._$", ]+\))?\s*(force )?(is|as)?(.*)"#)
+        static ref DDL: Regex = RegexBuilder::new(r#"create or replace (editionable|noneditionable)?\s*(package|type|view|trigger|function|procedure)\s*(body )?([a-z0-9_$"]+\.)?[a-z0-9_$"]+\s*(\([a-z0-9._$", ]+\))?\s*(force )?(is|as)?(.*)"#)
                             .case_insensitive(true)
                             .build()
                             .unwrap();
@@ -350,16 +350,16 @@ fn ensure_owner_in_ddl(
                 body = (caps.get(3).map_or("", |m| m.as_str())).to_lowercase(),
                 object_owner = object_owner,
                 object_name = object_name,
-                parameter_list = format!("{} ", caps.get(4).map_or("", |m| m.as_str())),
+                parameter_list = format!("{} ", caps.get(5).map_or("", |m| m.as_str())),
                 force_type = match object_type {
                     "TYPE" => "force ",
                     _ => ""
                 },
                 is_or_as = match object_type {
                     "TRIGGER" => "\n".to_string(),
-                    _ => (caps.get(6).map_or("", |m| m.as_str())).to_lowercase()
+                    _ => (caps.get(7).map_or("", |m| m.as_str())).to_lowercase()
                 }, // insert a line break for triggers
-                rest_of_line = caps.get(7).map_or("", |m| m.as_str())
+                rest_of_line = caps.get(8).map_or("", |m| m.as_str())
         )
     });
 
