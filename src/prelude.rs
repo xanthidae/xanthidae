@@ -61,6 +61,7 @@ const VERSION_INFO_CAPTION: &[u8] = b"Version info\0";
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const BUILD_TIMESTAMP: &str = env!("VERGEN_BUILD_TIMESTAMP");
 const VERGEN_GIT_SHA: &str = env!("VERGEN_GIT_SHA");
+const HOMEPAGE: &str = "https://github.com/xanthidae/xanthidae";
 
 static mut PLUGIN_ID: c_int = 0;
 
@@ -72,10 +73,11 @@ lazy_static! {
     pub static ref CONFIG: RwLock<Config> = RwLock::new(Config::default());
     static ref VERSION_MESSAGE: CString = CString::new(format!(
         "This is version {} of Xanthidae, a plugin written in Rust.\n\
-         \n\
+        \n\
          Build date: {}\n\
-         Git SHA: {}",
-        VERSION, BUILD_TIMESTAMP, VERGEN_GIT_SHA
+         Git SHA: {}\n\n\
+         Homepage: {}",
+        VERSION, BUILD_TIMESTAMP, VERGEN_GIT_SHA, HOMEPAGE
     ))
     .unwrap();
 }
