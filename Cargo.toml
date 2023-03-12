@@ -14,6 +14,12 @@ build = "build.rs"
 name = "xanthidae"
 crate-type = ["cdylib"]
 
+[profile.release]
+strip = true
+opt-level = "s"
+lto = true
+codegen-units = 1
+
 [package.metadata.winres]
 OriginalFilename = "xanthidae.dll"
 LegalCopyright = "This software is released under the Apache 2.0 license"
