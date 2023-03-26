@@ -12,12 +12,16 @@ use simplelog::Config as LogConfig;
 use simplelog::WriteLogger;
 use winapi::um::winuser::MB_ICONINFORMATION;
 use winapi::um::winuser::MB_OK;
+use windows::core::PCWSTR;
+
+use std::ffi::OsString;
+use std::os::windows::ffi::OsStrExt; // for converting between OsString and Windows-native string types
 
 use crate::config::Config;
 use crate::flyway::create_repeatable_migration;
 use crate::flyway::create_versioned_migration;
 use crate::plsqldev_api::{NativePlsqlDevApi, PlsqlDevApi};
-use crate::windows_api::show_message_box;
+use crate::windows_api::{show_message_box, show_task_dialog};
 
 const PLUGIN_NAME: &[u8] = b"Xanthidae\0";
 const TAB_NAME: &[u8] = b"TAB=Xanthidae\0";
@@ -71,15 +75,14 @@ lazy_static! {
     // See https://stackoverflow.com/questions/59679968/static-array-of-trait-objects
     pub static ref API: RwLock<Box<dyn PlsqlDevApi + Send + Sync>> = RwLock::new(Box::new(NativePlsqlDevApi::new()));
     pub static ref CONFIG: RwLock<Config> = RwLock::new(Config::default());
-    static ref VERSION_MESSAGE: CString = CString::new(format!(
+    static ref VERSION_MESSAGE: String = format!(
         "This is version {} of Xanthidae, a plugin written in Rust.\n\
         \n\
          Build date: {}\n\
          Git SHA: {}\n\n\
          Homepage: {}",
         VERSION, BUILD_TIMESTAMP, VERGEN_GIT_SHA, HOMEPAGE
-    ))
-    .unwrap();
+    );
 }
 
 #[allow(non_snake_case)]
@@ -281,5 +284,18 @@ fn set_charmode(api: &RwLockReadGuard<Box<dyn PlsqlDevApi + Send + Sync>>, plugi
 
 fn show_plugin_version() {
     let caption = CStr::from_bytes_with_nul(VERSION_INFO_CAPTION).unwrap();
-    show_message_box(&VERSION_MESSAGE, caption, MB_OK | MB_ICONINFORMATION);
+    //let s: PWCSTR = PWCSTR::from("x");
+    //let t = w!("x");
+    //let s: PCWSTR = PCWSTR::from_raw(VERSION_MESSAGE.as_bytes());
+
+    //let my_string = "Hello, world!";
+    //let my_pwcstr: PCWSTR = my_string.to_wide_null();
+
+    let my_string: &str = &VERSION_MESSAGE;
+    //let my_string = "Hello, world!";
+    let wide_string: Vec<u16> = OsString::from(my_string).encode_wide().chain(Some(0)).collect();
+    let my_pwcstr: PCWSTR = PCWSTR::from_raw(wide_string.as_ptr());
+    //let wide_string: Vec<u16> = OsString::from(my_string).encode_wide().chain(Some(0)).collect();
+    //let my_pwcstr: *const u16 = wide_string.as_ptr();
+    show_task_dialog(&"About", &VERSION_MESSAGE); // &VERSION_MESSAGE, caption, MB_OK | MB_ICONINFORMATION);
 }

@@ -1,4 +1,6 @@
-use std::ffi::{CStr, CString};
+//#![windows_subsystem = "windows"]
+
+use std::ffi::{CStr, CString, OsString};
 use std::mem::MaybeUninit;
 use std::os::raw::c_uint;
 use std::os::raw::{c_char, c_int, c_void};
@@ -26,6 +28,13 @@ use winapi::um::winnt::PWSTR;
 use winapi::um::winuser::MessageBoxA;
 use winapi::Interface;
 
+use windows::core::PCWSTR;
+use std::os::windows::ffi::OsStrExt; // for converting between OsString and Windows-native string types
+
+//use windows::core::Result;
+use windows::w;
+use windows::Win32::UI::Controls::{TaskDialog, TDCBF_OK_BUTTON, TD_INFORMATION_ICON};
+
 use crate::string_utils::{pwstr_to_cstring, vec_with_nul_to_string};
 
 const FILE_FILTER: &[u8] = b"All Files\0*.*\0\0";
@@ -45,6 +54,34 @@ pub fn show_message_box(message: &CStr, caption: &CStr, message_box_type: c_uint
         )
     }
 }
+
+pub fn show_task_dialog(title: &str, content: &str) -> windows::core::Result<()> {
+    let title_wide_string: Vec<u16> = OsString::from(title).encode_wide().chain(Some(0)).collect();
+    let title_pwcstr: PCWSTR = PCWSTR::from_raw(title_wide_string.as_ptr());
+    let content_wide_string: Vec<u16> = OsString::from(content).encode_wide().chain(Some(0)).collect();
+    let content_pwcstr: PCWSTR = PCWSTR::from_raw(content_wide_string.as_ptr());
+    
+    unsafe {
+        let pn_button: Option<*mut i32> = Option::None;
+        match TaskDialog(
+            Option::None,
+            Option::None,
+            title_pwcstr,
+            w!("Main instruction"),
+            content_pwcstr,
+            TDCBF_OK_BUTTON,
+            TD_INFORMATION_ICON,
+            pn_button,
+        ) {
+            Ok(_) => {}
+            Err(e) => println!("Could not execute TaskDialog, reason: {}", e),
+        }
+    }
+
+    Ok(())
+}
+
+
 
 // TODO: Also replace with the more modern IFileDialog from `get_save_folder_name()`
 pub fn get_save_file_name() -> Result<String, &'static str> {
