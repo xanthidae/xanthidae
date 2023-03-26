@@ -31,8 +31,6 @@ use winapi::Interface;
 use windows::core::PCWSTR;
 use std::os::windows::ffi::OsStrExt; // for converting between OsString and Windows-native string types
 
-//use windows::core::Result;
-use windows::w;
 use windows::Win32::UI::Controls::{TaskDialog, TDCBF_OK_BUTTON, TD_INFORMATION_ICON};
 
 use crate::string_utils::{pwstr_to_cstring, vec_with_nul_to_string};
@@ -55,20 +53,22 @@ pub fn show_message_box(message: &CStr, caption: &CStr, message_box_type: c_uint
     }
 }
 
-pub fn show_task_dialog(title: &str, content: &str) -> windows::core::Result<()> {
+pub fn show_task_dialog(title: &str, main_instruction: &str, content: &str) -> windows::core::Result<()> {
     let title_wide_string: Vec<u16> = OsString::from(title).encode_wide().chain(Some(0)).collect();
-    let title_pwcstr: PCWSTR = PCWSTR::from_raw(title_wide_string.as_ptr());
+    let title_pcwstr: PCWSTR = PCWSTR::from_raw(title_wide_string.as_ptr());
     let content_wide_string: Vec<u16> = OsString::from(content).encode_wide().chain(Some(0)).collect();
-    let content_pwcstr: PCWSTR = PCWSTR::from_raw(content_wide_string.as_ptr());
+    let content_pcwstr: PCWSTR = PCWSTR::from_raw(content_wide_string.as_ptr());
+    let main_instruction_wide_string: Vec<u16> = OsString::from(main_instruction).encode_wide().chain(Some(0)).collect();
+    let main_instruction_pcwstr: PCWSTR = PCWSTR::from_raw(main_instruction_wide_string.as_ptr());
     
     unsafe {
         let pn_button: Option<*mut i32> = Option::None;
         match TaskDialog(
             Option::None,
             Option::None,
-            title_pwcstr,
-            w!("Main instruction"),
-            content_pwcstr,
+            title_pcwstr,
+            main_instruction_pcwstr,
+            content_pcwstr,
             TDCBF_OK_BUTTON,
             TD_INFORMATION_ICON,
             pn_button,

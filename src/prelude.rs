@@ -1,5 +1,4 @@
 use std::env;
-use std::ffi::{CStr, CString};
 use std::fs::File;
 use std::os::raw::c_char;
 use std::os::raw::c_int;
@@ -10,12 +9,6 @@ use std::sync::{RwLock, RwLockReadGuard};
 use log::LevelFilter;
 use simplelog::Config as LogConfig;
 use simplelog::WriteLogger;
-use winapi::um::winuser::MB_ICONINFORMATION;
-use winapi::um::winuser::MB_OK;
-use windows::core::PCWSTR;
-
-use std::ffi::OsString;
-use std::os::windows::ffi::OsStrExt; // for converting between OsString and Windows-native string types
 
 use crate::config::Config;
 use crate::flyway::create_repeatable_migration;
@@ -30,7 +23,7 @@ const ITEM_NAME_VERSIONED_MIGRATION: &[u8] = b"ITEM=Versioned migration\0";
 const ITEM_NAME_REPEATABLE_MIGRATION: &[u8] = b"ITEM=Repeatable migration\0";
 const ITEM_NAME_REPEATABLE_AND_VERSIONED_MIGRATION: &[u8] =
     b"ITEM=Repeatable + versioned migration\0";
-const ITEM_NAME_VERSION_INFO: &[u8] = b"ITEM=Plugin version\0";
+const ITEM_NAME_ABOUT: &[u8] = b"ITEM=Plugin version\0";
 const EMPTY: &[u8] = b"\0";
 
 const FUNCTION_OBJECT_TYPE: &str = "FUNCTION";
@@ -54,14 +47,14 @@ const COMMAND_WINDOW: &str = "COMMANDWINDOW";
 const VERSIONED_MIGRATION_INDEX: c_int = 11;
 const REPEATABLE_MIGRATION_INDEX: c_int = 12;
 const REPEATABLE_AND_VERSIONED_MIGRATION_INDEX: c_int = 13;
-const VERSION_INFO_INDEX: c_int = 14;
+const ABOUT_INDEX: c_int = 14;
 
 const POPUP_ITEM_NAME_VERSIONED_MIGRATION: &str = "Versioned migration...";
 const POPUP_ITEM_NAME_REPEATABLE_MIGRATION: &str = "Repeatable migration...";
 const POPUP_ITEM_NAME_REPEATABLE_AND_VERSIONED_MIGRATION: &str =
     "Repeatable + versioned migration...";
 
-const VERSION_INFO_CAPTION: &[u8] = b"Version info\0";
+const ABOUT_CAPTION: &str = "About";
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const BUILD_TIMESTAMP: &str = env!("VERGEN_BUILD_TIMESTAMP");
 const VERGEN_GIT_SHA: &str = env!("VERGEN_GIT_SHA");
@@ -105,7 +98,7 @@ pub extern "C" fn CreateMenuItem(Index: c_int) -> *mut c_char {
         REPEATABLE_AND_VERSIONED_MIGRATION_INDEX => {
             ITEM_NAME_REPEATABLE_AND_VERSIONED_MIGRATION.as_ptr()
         }
-        VERSION_INFO_INDEX => ITEM_NAME_VERSION_INFO.as_ptr(),
+        ABOUT_INDEX => ITEM_NAME_ABOUT.as_ptr(),
         _ => EMPTY.as_ptr(),
     };
     result as *mut c_char
@@ -122,7 +115,7 @@ pub extern "C" fn OnMenuClick(Index: c_int) {
         REPEATABLE_AND_VERSIONED_MIGRATION_INDEX => {
             create_repeatable_migration(&api, &config, true)
         }
-        VERSION_INFO_INDEX => show_plugin_version(),
+        ABOUT_INDEX => show_about_dialog(),
         _ => (),
     }
 }
@@ -282,20 +275,6 @@ fn set_charmode(api: &RwLockReadGuard<Box<dyn PlsqlDevApi + Send + Sync>>, plugi
     api.ide_plugin_setting(plugin_id, "CHARMODE", "UTF8");
 }
 
-fn show_plugin_version() {
-    let caption = CStr::from_bytes_with_nul(VERSION_INFO_CAPTION).unwrap();
-    //let s: PWCSTR = PWCSTR::from("x");
-    //let t = w!("x");
-    //let s: PCWSTR = PCWSTR::from_raw(VERSION_MESSAGE.as_bytes());
-
-    //let my_string = "Hello, world!";
-    //let my_pwcstr: PCWSTR = my_string.to_wide_null();
-
-    let my_string: &str = &VERSION_MESSAGE;
-    //let my_string = "Hello, world!";
-    let wide_string: Vec<u16> = OsString::from(my_string).encode_wide().chain(Some(0)).collect();
-    let my_pwcstr: PCWSTR = PCWSTR::from_raw(wide_string.as_ptr());
-    //let wide_string: Vec<u16> = OsString::from(my_string).encode_wide().chain(Some(0)).collect();
-    //let my_pwcstr: *const u16 = wide_string.as_ptr();
-    show_task_dialog(&"About", &VERSION_MESSAGE); // &VERSION_MESSAGE, caption, MB_OK | MB_ICONINFORMATION);
+fn show_about_dialog() {
+    let _dummy = show_task_dialog(ABOUT_CAPTION, &"Xanthidae", &VERSION_MESSAGE);
 }
