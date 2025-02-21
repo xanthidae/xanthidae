@@ -22,7 +22,7 @@ ProductName = "Xanthidae"
 ProductVersion = "1.0"
 
 [dependencies]
-winapi = { version = "0.3.9", features = ["winuser", "commdlg", "shobjidl", "shobjidl_core", "combaseapi", "objbase", "winbase"] }
+winapi = { version = "0.3.9", features = ["winuser", "commdlg", "shobjidl", "shobjidl_core", "combaseapi", "objbase", "winbase", "winerror"] }
 scopeguard = "1.1.0"
 lazy_static = "1.4.0"
 log = "0.4.14"
