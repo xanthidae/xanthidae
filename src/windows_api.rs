@@ -1,7 +1,7 @@
 use std::ffi::{CStr, CString};
 use std::mem::MaybeUninit;
 use std::os::raw::c_uint;
-use std::os::raw::{c_char, c_int, c_void};
+use std::os::raw::{c_char, c_int};
 use std::{mem, ptr};
 
 use winapi::shared::winerror::SUCCEEDED;
@@ -113,7 +113,7 @@ pub fn get_save_folder_name() -> String {
                 ptr::null_mut(),
                 CLSCTX_INPROC,
                 &IFileOpenDialog::uuidof(),
-                file_open_dialog.as_mut_ptr() as *mut *mut c_void,
+                file_open_dialog.as_mut_ptr() as *mut *mut winapi::ctypes::c_void,
             );
 
             if SUCCEEDED(hr) {
@@ -136,7 +136,7 @@ pub fn get_save_folder_name() -> String {
                         if SUCCEEDED((*shell_item).GetDisplayName(SIGDN_FILESYSPATH, &mut buffer)) {
                             selected_folder = pwstr_to_cstring(buffer);
                         }
-                        CoTaskMemFree(buffer as *mut std::ffi::c_void);
+                        CoTaskMemFree(buffer as *mut winapi::ctypes::c_void);
                     }
                     (*shell_item).Release();
                 }
